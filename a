@@ -1,0 +1,58 @@
+import speech_recognition as sr
+import pyttsx3
+import webbrowser
+
+# Inicializar o mecanismo de texto para fala
+engine = pyttsx3.init()
+
+
+def speak(text):
+    engine.say(text)
+    engine.runAndWait()
+
+
+def listen():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Estou ouvindo...")
+        audio = r.listen(source)
+
+        try:
+            command = r.recognize_google(audio, language="pt-BR")
+            print(f"Você disse: {command}")
+            return command
+        except sr.UnknownValueError:
+            print("Desculpe, não entendi.")
+            return None
+        except sr.RequestError:
+            print("Erro ao conectar ao serviço de reconhecimento de voz.")
+            return None
+
+
+def main():
+    speak("Olá, eu sou seu assistente. Como posso ajudar?")
+
+    while True:
+        command = listen()
+
+        if command:
+            command = command.lower()  # Converte o comando para minúsculas
+
+            if "sair" in command:
+                speak("Até logo!")
+                break
+            elif "como você está" in command:
+                speak("Estou bem, obrigado por perguntar!")
+            elif "google" in command:
+                speak("Abrindo o Google agora.")
+                webbrowser.open("https://www.google.com")
+            elif "batata" in command:
+                webbrowser.open("https://chatgpt.com/")
+            elif "caca" in command:
+                webbrowser.open("https://www.youtube.com/watch?v=E4WlUXrJgy4&t=2s")
+            else:
+                speak("Desculpe, não posso ajudar com isso.")
+
+
+if __name__ == "__main__":
+    main()
